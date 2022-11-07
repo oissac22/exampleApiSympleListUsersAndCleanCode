@@ -20,11 +20,19 @@ export class CollectionMongoDb {
         private readonly collectionName: string
     ) { }
 
-    async collection() {
+    private defineClientConnection() {
         if (!CollectionMongoDb.client)
             CollectionMongoDb.client = new MongoClient(DATABASE_URL);
+    }
+
+    private difineDBConnection() {
         if (!CollectionMongoDb.Db)
             CollectionMongoDb.Db = CollectionMongoDb.client.db(DB_NAME);
+    }
+
+    async collection() {
+        this.defineClientConnection();
+        this.difineDBConnection();
         const collection = await CollectionMongoDb.Db.collection(this.collectionName);
         return collection;
     }
