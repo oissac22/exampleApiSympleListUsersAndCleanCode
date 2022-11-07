@@ -7,5 +7,12 @@
     "checkJs": true,
     "outDir": "./dist",
     "esModuleInterop": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ],
+  "include": [
+    "src"
+  ]
 }

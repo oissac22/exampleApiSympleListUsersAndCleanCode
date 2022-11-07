@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest",
     "test:o": "jest -o",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "Cássio da Silva Carneiro",
