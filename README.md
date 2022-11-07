@@ -1,3 +1,5 @@
+# example symple api to users list and clean code
+
 # required ENVs:
     DATABASE_URL=<mongodb database url>
     DB_NAME=<database name>
