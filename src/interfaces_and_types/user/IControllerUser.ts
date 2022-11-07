@@ -10,5 +10,5 @@ export interface IControllerUser {
     updateUser(props: { params: TKey, body: TKey }): Promise<TReturnController>;
     deleteUserByEmail(props: { params: TKey }): Promise<TReturnController>;
     listUsers(props: { query: TKey }): Promise<TReturnController<any[]>>;
-    userByEmail(email: string): Promise<TReturnController>;
+    userByEmail(props: { params: TKey }): Promise<TReturnController>;
 }
