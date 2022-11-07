@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:o": "jest -o"
+    "test:o": "jest -o",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Cássio da Silva Carneiro",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.12",
