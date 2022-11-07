@@ -41,22 +41,10 @@ type TDataFromList = {
 
 type TReturnUser = TReturnInsertUser;
 
-export interface IServiceUserInsert {
-    execute(data: TUserDataInsert): Promise<TReturnInsertUser>;
-}
-
-export interface IServiceUserUpdate {
-    execute(email: string, data: TUserDataUpdate): Promise<TReturnUpdateUser>;
-}
-
-export interface IServiceUserDelete {
-    execute(email: string): Promise<void>;
-}
-
-export interface IServiceUserList {
-    execute(props: TPropsList): Promise<TDataFromList[]>;
-}
-
-export interface IServiceUserGetUserByEmail {
-    execute(email: string): Promise<TReturnUser>;
+export interface IServiceUser {
+    insert(data: TUserDataInsert): Promise<TReturnInsertUser>;
+    update(email: string, data: TUserDataUpdate): Promise<TReturnUpdateUser>;
+    delete(email: string): Promise<void>;
+    getList(props: TPropsList): Promise<TDataFromList[]>;
+    getDataByEmail(email: string): Promise<TReturnUser>;
 }

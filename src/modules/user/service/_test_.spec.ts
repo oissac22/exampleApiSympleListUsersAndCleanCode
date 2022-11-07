@@ -1,5 +1,5 @@
-import { IModuleUserDelete, IModuleUserGetUserByEmail, IModuleUserInsert, IModuleUserListUsers, IModuleUserUpdate } from "../../../interfaces_and_types/index"
-import { ServiceUserDataByEmail, ServiceUserDelete, ServiceUserInsert, ServiceUserList, ServiceUserUpdate } from "./index"
+import { IModuleUser } from "../../../interfaces_and_types/index"
+import { ServiceUser } from "./index"
 
 const LIST_USERS: { [key: string]: any } = {}
 const FAKE_DATE = new Date();
@@ -100,32 +100,26 @@ const deleteThisNewUser = () => deleteUser('email_test');
 
 
 
-class FakeModuleUserInsert implements IModuleUserInsert {
-    async execute(data: any) {
-        LIST_USERS[data._id] = data;
-    }
-}
-
-class FakeModuleUserUpdate implements IModuleUserUpdate {
-    async execute(email: string, data: any) {
-        if (LIST_USERS[email])
-            LIST_USERS[email] = { ...LIST_USERS[email], ...data };
-    }
-}
-
-class FakeModuleUserDelete implements IModuleUserDelete {
-    async execute(email: string) {
-        delete LIST_USERS[email];
-    }
-}
-
-class FakeModuleUserList implements IModuleUserListUsers {
+class FakeModuleUser implements IModuleUser {
 
     private textFindInText(textFind: string, textFull: string) {
         return textFull.toLowerCase().includes(textFind.toLowerCase());
     }
 
-    async execute(props: { index: number; limit: number; filter?: string; }): Promise<any[]> {
+    async insert(data: any): Promise<void> {
+        LIST_USERS[data._id] = data;
+    }
+
+    async update(email: string, data: any): Promise<void> {
+        if (LIST_USERS[email])
+            LIST_USERS[email] = { ...LIST_USERS[email], ...data };
+    }
+
+    async delete(email: string): Promise<void> {
+        delete LIST_USERS[email];
+    }
+
+    async getList(props: { index: number; limit: number; filter?: string; }): Promise<any[]> {
         const { index, limit, filter } = props;
         const list = Object.values(LIST_USERS);
         const listFilter = filter ?
@@ -138,19 +132,18 @@ class FakeModuleUserList implements IModuleUserListUsers {
         const listLimit = listFilter.slice(index, index + limit);
         return listLimit;
     }
-}
 
-class FakeModuleUserGetByEmail implements IModuleUserGetUserByEmail {
-    async execute(email: string) {
+    async getDataByEmail(email: string): Promise<any> {
         return LIST_USERS[email] || null;
     }
+
 }
 
 
 
 async function insertNewUser(data: { _id: string, level: string, name: string, password: string }) {
-    const serviceUserInsert = new ServiceUserInsert(new FakeModuleUserInsert(), FAKE_DATE)
-    const result = await serviceUserInsert.execute(data);
+    const serviceUser = new ServiceUser(new FakeModuleUser())
+    const result = await serviceUser.insert(data, FAKE_DATE);
     expect(result).toEqual({
         _dateCreated: FAKE_DATE,
         _dateUpdate: FAKE_DATE,
@@ -161,8 +154,8 @@ async function insertNewUser(data: { _id: string, level: string, name: string, p
 }
 
 async function updateUser(email: string, data: { level?: string, name?: string, password?: string }) {
-    const serviceUserUpdate = new ServiceUserUpdate(new FakeModuleUserUpdate(), AFTER_DATE)
-    const result = await serviceUserUpdate.execute(email, data);
+    const serviceUser = new ServiceUser(new FakeModuleUser())
+    const result = await serviceUser.update(email, data, AFTER_DATE);
     const { password, ...returnData } = data;
     expect(result).toEqual({
         ...returnData,
@@ -172,8 +165,8 @@ async function updateUser(email: string, data: { level?: string, name?: string, 
 }
 
 async function deleteUser(email: string) {
-    const serviceUserDelete = new ServiceUserDelete(new FakeModuleUserDelete());
-    await serviceUserDelete.execute(email);
+    const serviceUser = new ServiceUser(new FakeModuleUser());
+    await serviceUser.delete(email);
 }
 
 function checkExistentUser(data: { _id: string, level: string, name: string, _dateCreated: Date, _dateUpdate: Date }) {
@@ -187,16 +180,16 @@ function checkInexistentUser(data: { _id: string, level: string, name: string, _
 }
 
 async function addInitialRegistersTest() {
-    const serviceUserInsert = new ServiceUserInsert(new FakeModuleUserInsert(), FAKE_DATE);
-    await serviceUserInsert.execute({ _id: 'email_test_1', level: 'level_1', name: 'Name Test1', password: '****' });
-    await serviceUserInsert.execute({ _id: 'email_test_2', level: 'level_2', name: 'Name Test2', password: '****' });
-    await serviceUserInsert.execute({ _id: 'email_test_3', level: 'level_3', name: 'Name Test3', password: '****' });
+    const serviceUser = new ServiceUser(new FakeModuleUser());
+    await serviceUser.insert({ _id: 'email_test_1', level: 'level_1', name: 'Name Test1', password: '****' }, FAKE_DATE);
+    await serviceUser.insert({ _id: 'email_test_2', level: 'level_2', name: 'Name Test2', password: '****' }, FAKE_DATE);
+    await serviceUser.insert({ _id: 'email_test_3', level: 'level_3', name: 'Name Test3', password: '****' }, FAKE_DATE);
 }
 
 async function getListUsers(props: { index: number, limit: number, filter?: string }) {
     const { index, limit, filter } = props;
-    const serviceUserList = new ServiceUserList(new FakeModuleUserList());
-    const result = await serviceUserList.execute({ index, limit, filter });
+    const serviceUser = new ServiceUser(new FakeModuleUser());
+    const result = await serviceUser.getList({ index, limit, filter });
     return result;
 }
 
@@ -219,7 +212,7 @@ async function expectFromListUsers(
 }
 
 async function getUserByEmail(email: string) {
-    const serviceUserDataByEmail = new ServiceUserDataByEmail(new FakeModuleUserGetByEmail())
-    const result = await serviceUserDataByEmail.execute(email);
+    const serviceUser = new ServiceUser(new FakeModuleUser())
+    const result = await serviceUser.getDataByEmail(email);
     return result;
 }

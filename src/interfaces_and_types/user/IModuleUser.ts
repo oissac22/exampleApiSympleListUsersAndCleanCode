@@ -4,22 +4,10 @@ type TPropsList = {
     filter?: string,
 }
 
-export interface IModuleUserInsert {
-    execute(data: any): Promise<void>;
-}
-
-export interface IModuleUserUpdate {
-    execute(email: string, data: any): Promise<void>;
-}
-
-export interface IModuleUserDelete {
-    execute(email: string): Promise<void>;
-}
-
-export interface IModuleUserListUsers {
-    execute(props: TPropsList): Promise<any[]>;
-}
-
-export interface IModuleUserGetUserByEmail {
-    execute(email: string): Promise<any>;
+export interface IModuleUser {
+    insert(data: any): Promise<void>;
+    update(email: string, data: any): Promise<void>;
+    delete(email: string): Promise<void>;
+    getList(props: TPropsList): Promise<any[]>;
+    getDataByEmail(email: string): Promise<any>;
 }
