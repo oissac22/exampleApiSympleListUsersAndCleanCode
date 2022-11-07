@@ -13,7 +13,8 @@ export class ControllerUser implements IControllerUser {
     private verifyError(e: any) {
         const err = e as IError;
         if (err.showClient) {
-            return this.validReturn({ ...err }, err.status);
+            const { message, name } = err;
+            return this.validReturn({ message, name }, err.status);
         } else {
             return this.validReturn({ status: 'error' }, 500);
         }

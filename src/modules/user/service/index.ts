@@ -1,4 +1,5 @@
 import {
+    IError,
     IModuleUser,
     IServiceUser,
 } from "../../../interfaces_and_types/index";
@@ -21,12 +22,20 @@ export class ServiceUser implements IServiceUser {
         private readonly modelUser: IModuleUser,
     ) { }
 
+    private validateInsertData(data: TData) {
+        if (!data._id) throw new ErroNotParam('_id', data._id);
+        if (!data.level) throw new ErroNotParam('level', data.level);
+        if (!data.name) throw new ErroNotParam('name', data.name);
+        if (!data.password) throw new ErroNotParam('password', data.password);
+    }
+
     async insert(data: TData, dateNow: Date = new Date()): Promise<TReturn> {
         const writeData = {
             ...data,
             _dateCreated: dateNow,
             _dateUpdate: dateNow,
         }
+        this.validateInsertData(data);
         await this.modelUser.insert(writeData);
         delete writeData.password;
         return writeData;
@@ -52,6 +61,22 @@ export class ServiceUser implements IServiceUser {
 
     async getDataByEmail(email: string): Promise<TReturn> {
         return await this.modelUser.getDataById(email);
+    }
+
+}
+
+
+
+class ErroNotParam extends Error implements IError {
+    showClient = true;
+    status = 406;
+    name = 'invalidParamValue';
+
+    constructor(
+        readonly paramName: string,
+        readonly paramValue: any,
+    ) {
+        super(`A propriedade "${paramName}" não aceita o valor "${paramValue}"`)
     }
 
 }

@@ -16,7 +16,28 @@ async function initializeController() {
 initializeController();
 
 
+
 routerUser.get('/', async (req, res) => {
     const result = await controller.listUsers({ query: req.query as any });
+    res.status(result.status).send(result.data);
+})
+
+routerUser.get('/:id', async (req, res) => {
+    const result = await controller.userByEmail({ params: req.params });
+    res.status(result.status).send(result.data);
+})
+
+routerUser.post('/', async (req, res) => {
+    const result = await controller.insertNewUser({ body: req.body as any });
+    res.status(result.status).send(result.data);
+})
+
+routerUser.put('/:id', async (req, res) => {
+    const result = await controller.updateUser({ params: req.params, body: req.body as any });
+    res.status(result.status).send(result.data);
+})
+
+routerUser.delete('/:id', async (req, res) => {
+    const result = await controller.deleteUserByEmail({ params: req.params });
     res.status(result.status).send(result.data);
 })

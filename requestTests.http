@@ -1,0 +1,29 @@
+GET http://localhost:4000/user
+### get users list
+
+GET http://localhost:4000/user/21c09a94-3a6e-45e6-9d2b-aa0d171a75e6
+### get user by id
+
+
+@new_user={{$guid}}
+
+POST http://localhost:4000/user
+Content-Type: application/json
+
+{
+    "_id":"{{new_user}}",
+    "level":"admin",
+    "name":"{{new_user}}",
+    "password":"123456"
+}
+### insert new user
+
+PUT http://localhost:4000/user/21c09a94-3a6e-45e6-9d2b-aa0d171a75e6
+Content-Type: application/json
+
+{
+    "level":"suport"
+}
+### update user
+
+DELETE http://localhost:4000/user/d6889c4f-fed4-4549-93d6-f05f5a11d20e
