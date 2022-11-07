@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    // "module": "commonjs",
+    "module": "commonjs",
     "rootDir": "./src",
     "allowJs": true,
     "checkJs": true,
