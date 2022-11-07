@@ -51,7 +51,7 @@ export class ServiceUser implements IServiceUser {
     }
 
     async getDataByEmail(email: string): Promise<TReturn> {
-        return await this.modelUser.getDataByEmail(email);
+        return await this.modelUser.getDataById(email);
     }
 
 }

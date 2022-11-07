@@ -133,7 +133,7 @@ class FakeModuleUser implements IModuleUser {
         return listLimit;
     }
 
-    async getDataByEmail(email: string): Promise<any> {
+    async getDataById(email: string): Promise<any> {
         return LIST_USERS[email] || null;
     }
 
